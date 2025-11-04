@@ -10,21 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Получить код
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Установить .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 3. Восстановить зависимости
       - name: Restore dependencies
         run: dotnet restore
 
-      # 4. Собрать проекты (Release)
       - name: Build projects
         run: dotnet build -c Release --no-restore
 
@@ -33,32 +29,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Получить код
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Установить .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 3. Восстановить зависимости
       - name: Restore dependencies
         run: dotnet restore
 
-      # 4. Запустить тесты с генерацией отчёта покрытия
       - name: Run tests with coverage
         run: |
-          dotnet test StringAppDemo.Tests/StringAppDemo.Tests.csproj \
+          dotnet test StringHelper.Tests/StringHelper.Tests.csproj \
             -c Release \
             --collect:"XPlat Code Coverage" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
-      # 5. Опубликовать отчёт как артефакт
       - name: Upload code coverage report
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage
-          path: StringAppDemo.Tests/TestResults/*.xml
-
+          path: StringHelper.Tests/TestResults/**/*.xml
